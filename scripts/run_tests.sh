@@ -1,0 +1,3 @@
+#!/bin/bash
+
+go test -tags=all -coverprofile=coverage.out -v ./... 
