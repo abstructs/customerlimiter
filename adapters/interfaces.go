@@ -10,7 +10,8 @@ import (
 // DataLoader loads the data from the input into
 // the customers slice
 type DataLoader interface {
-	ReadInput(file *os.File) []domain.CustomerLoadEvent
+	ReadInput(inputFile *os.File) []domain.CustomerLoadEvent
+	WriteOutput(outputFile *os.File, output []domain.OutputLoadEvent) error
 }
 
 // TimedBalanceLedger maintains a track of the

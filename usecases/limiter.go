@@ -23,8 +23,8 @@ type limiter struct {
 	processed         map[domain.CustomerID]map[string]bool
 }
 
-func (l *limiter) GenerateOutputFile(customerEvents []domain.CustomerLoadEvent) []domain.LoadEventOutput {
-	var res []domain.LoadEventOutput
+func (l *limiter) GenerateOutput(customerEvents []domain.CustomerLoadEvent) []domain.OutputLoadEvent {
+	var res []domain.OutputLoadEvent
 	for _, customerEvent := range customerEvents {
 		if l.alreadyHandledEvent(&customerEvent) {
 			continue
@@ -60,9 +60,9 @@ func (l *limiter) setHandledEvent(customerLoadEvent *domain.CustomerLoadEvent) {
 
 }
 
-func (l *limiter) handleEvent(customerLoadEvent *domain.CustomerLoadEvent) domain.LoadEventOutput {
+func (l *limiter) handleEvent(customerLoadEvent *domain.CustomerLoadEvent) domain.OutputLoadEvent {
 	if !l.canFund(customerLoadEvent) {
-		return domain.LoadEventOutput{
+		return domain.OutputLoadEvent{
 			ID:         customerLoadEvent.ID,
 			CustomerID: customerLoadEvent.CustomerID.String(),
 			Accepted:   false,
@@ -72,7 +72,7 @@ func (l *limiter) handleEvent(customerLoadEvent *domain.CustomerLoadEvent) domai
 	l.timeBalanceLedger.LoadDailyAmount(customerLoadEvent)
 	l.timeBalanceLedger.LoadWeeklyAmount(customerLoadEvent)
 
-	return domain.LoadEventOutput{
+	return domain.OutputLoadEvent{
 		ID:         customerLoadEvent.ID,
 		CustomerID: customerLoadEvent.CustomerID.String(),
 		Accepted:   true,

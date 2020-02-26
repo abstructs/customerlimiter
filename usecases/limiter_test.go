@@ -13,17 +13,17 @@ import (
 	"kohotakehome.com/m/usecases"
 )
 
-func loadExpectedOutputFile() []domain.LoadEventOutput {
+func loadExpectedOutputFile() []domain.OutputLoadEvent {
 	file, err := os.Open("./../output.txt")
 	if err != nil {
 		log.Fatal("unable to open output file")
 	}
 	defer file.Close()
 
-	var outputRes []domain.LoadEventOutput
+	var outputRes []domain.OutputLoadEvent
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		output := domain.LoadEventOutput{}
+		output := domain.OutputLoadEvent{}
 		json.Unmarshal(scanner.Bytes(), &output)
 		outputRes = append(outputRes, output)
 	}
@@ -49,7 +49,7 @@ func Test_Limiter(t *testing.T) {
 			TimeBalanceLedger: adapters.NewBalanceLedger(),
 		})
 
-		actualOutput := generateOutputUsecase.GenerateOutputFile(customers)
+		actualOutput := generateOutputUsecase.GenerateOutput(customers)
 
 		assert.Equal(t, expectedOutput, actualOutput)
 	})
